@@ -12,7 +12,7 @@
     <button class="btn btn-outline-success">Buscar</button>
   </div>
 </div>
-<h3>Filtro: {{filtroLista}}</h3>
+<h3>Filtro: {{ filtroLista }}</h3>
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
@@ -33,7 +33,7 @@
   </thead>
   <!-- Diretivas Estruturais -->
   <tbody *ngIf="eventos && eventos.length">
-    <tr *ngFor="let evento of eventos">
+    <tr *ngFor="let evento of eventosFiltrados">
       <td>
         <!-- Properties Bindings -->
         <img [collapse]="!exibirImagem"
