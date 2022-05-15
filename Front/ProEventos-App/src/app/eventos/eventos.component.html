@@ -23,7 +23,12 @@
   <tbody *ngIf="eventos && eventos.length">
     <tr *ngFor="let evento of eventos">
       <td>{{evento.eventoId}}</td>
-      <td>{{evento.imagemURL}}</td>
+      <td>
+        <img src="/assets/{{evento.imagemURL}}"
+         [style.width.px]="widthImg"
+         [style.margin.px]="marginImg"
+         alt="imagens dos participantes dos eventos">
+      </td>
       <td>{{evento.tema}}</td>
       <td>{{evento.local}}</td>
       <td>{{evento.data}}</td>
