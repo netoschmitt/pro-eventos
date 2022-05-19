@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.Application.Contratos;
 using ProEventos.Domain;
-using ProEventos.Persistence.Contextos;
 
 namespace ProEventos.API.Controllers
 {
@@ -76,20 +73,56 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public string Post()
+        public async Task<IActionResult> Post(Evento model)
         {
-            return "Exemplo de Post";
+           try
+            {
+                var evento = await this.eventoService.AddEventos(model);
+                if (evento == null) return BadRequest("Erro ao tentar adicionar evento.");
+
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
+            }
         }
 
         [HttpPut("{id}")]
-        public string Put(int id)
+        public async Task<IActionResult> Put(int id, Evento model)
         {
-            return $"Exemplo de Put com id = {id}";
+            try
+            {
+                var evento = await this.eventoService.UpdateEvento(id, model);
+                if (evento == null) return BadRequest("Erro ao tentar adicionar evento.");
+
+                return Ok(evento);
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                $"Erro ao tentar atualizar eventos. Erro: {ex.Message}");
+            }
         }
+
         [HttpDelete("{id}")]
-        public string Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return $"Exemplo de Delete com id = {id}";
+            try
+            {
+
+                return await this.eventoService.DeleteEvento(id) ?
+                     Ok("Evento deletado com sucesso.") : 
+                     BadRequest("Evento não deletado.");
+                
+            }
+            catch (Exception ex)
+            {
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                $"Erro ao tentar deletar eventos. Erro: {ex.Message}");
+            }
+            
         }
     }
 }
