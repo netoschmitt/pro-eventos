@@ -7,7 +7,7 @@ namespace ProEventos.Persistence.Contratos
     {
 
          Task<Evento[]> GetAllEventosByTemaAsync(string tema, bool includePalestrantes);
-         Task<Evento[]> GetAllEventosAsync(string tema,  bool includePalestrantes);
+         Task<Evento[]> GetAllEventosAsync( bool includePalestrantes);
          Task<Evento> GetEventoByIdAsync(int EventoId,  bool includePalestrantes);
 
         
