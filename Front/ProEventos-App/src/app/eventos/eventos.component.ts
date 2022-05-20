@@ -1,5 +1,6 @@
 import { EventoService } from './../services/evento.service';
 import { Component, OnInit } from '@angular/core';
+import { Evento } from '../models/Evento';
 
 @Component({
   selector: 'app-eventos',
@@ -9,13 +10,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class EventosComponent implements OnInit {
 
-  public eventos: any = [];
-  public eventosFiltrados: any = [];
+  public eventos: Evento[] = [];
+  public eventosFiltrados: Evento[] = [];
 
-  larguraImagem = 150;
-  margemImagem = 2;
-  exibirImagem = true;
-  private _filtroLista = '';
+  public larguraImagem: number = 150;
+  public margemImagem: number = 2;
+  public exibirImagem: boolean = true;
+  private _filtroLista: string ='';
 
   public get filtroLista(): string {
     return this._filtroLista;
@@ -26,7 +27,7 @@ export class EventosComponent implements OnInit {
     this.eventosFiltrados = this.filtroLista ? this.filtrarEventos(this.filtroLista) : this.eventos;
   }
 
-  filtrarEventos(filtrarPor: string): any {
+  public filtrarEventos(filtrarPor: string): Evento[] {
     filtrarPor = filtrarPor.toLocaleLowerCase();
     return this.eventos.filter(
       (evento: { tema: string; local: string }) =>
@@ -37,17 +38,17 @@ export class EventosComponent implements OnInit {
 
   constructor(private eventoService: EventoService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getEventos();
   }
 
-  alterarImagem() {
+  public alterarImagem(): void {
     this.exibirImagem = !this.exibirImagem;
   }
 
   public getEventos(): void {
     this.eventoService.getEventos().subscribe(
-      response => {
+      (response: Evento[]) => {
         this.eventos = response;
         this.eventosFiltrados = this.eventos;
       },
