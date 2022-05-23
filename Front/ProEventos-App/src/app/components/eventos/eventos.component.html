@@ -3,27 +3,39 @@
 [iconClass]="'fa fa-calendar-alt'"
 [botaoListar]="true"></app-titulo>
 
-<div class="form-inline">
-  <div class="form-group mb-2">
-    <label class="mr-2">Filtro</label>
-    <input
-    type="text"
-    class="form-control mr-2"
-    placeholder="buscar"
-    [(ngModel)]="filtroLista"
-    >
-    <!-- <button class="btn btn-outline-success">Buscar</button> -->
+<div class="card rounded shadow-sm p-3">
+
+  <div class="d-flex">
+    <div class="flex-fill pr-3">
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">Filtro:</div>
+        </div>
+        <input
+        type="text"
+        class="form-control"
+        placeholder="Filtrar por Tema e Local"
+        [(ngModel)]="filtroLista"
+        >
+      </div>
+    </div>
+    <div>
+      <a class="d-flex btn btn-outline-primary" href="#">
+        <i class="fa fa-plus-circle my-1"></i>
+        <b class="ml-1">Novo</b>
+
+      </a>
+    </div>
   </div>
-</div>
-<!-- <h3>Filtro: {{ filtroLista }}</h3> -->
-<table class="table table-striped">
-  <thead class="thead-dark">
-    <tr>
-      <th>
-        <button type="button" class="btn btn-outline-light btn-sm"
-        (click)="alterarImagem()">
-        <i class=" {{!exibirImagem ? 'fa fa-eye' : 'fa fa-eye-slash'}} "></i>
-           {{!exibirImagem ? 'exibir' : 'ocultar'}}
+  <!-- <h3>Filtro: {{ filtroLista }}</h3> -->
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <tr>
+        <th>
+          <button type="button" class="btn btn-outline-light btn-sm"
+          (click)="alterarImagem()">
+          <i class=" {{!exibirImagem ? 'fa fa-eye' : 'fa fa-eye-slash'}} "></i>
+          {{!exibirImagem ? 'exibir' : 'ocultar'}}
         </button>
       </th>
       <th>#</th>
@@ -41,11 +53,11 @@
       <td>
         <!-- Properties Bindings -->
         <img [collapse]="!exibirImagem"
-          [isAnimated]="true"
-         src="/assets/{{evento.imagemURL}}"
-         [style.width.px]="larguraImagem"
-         [style.margin.px]="exibirImagem"
-         alt="imagens dos participantes dos eventos">
+        [isAnimated]="true"
+        src="/assets/{{evento.imagemURL}}"
+        [style.width.px]="larguraImagem"
+        [style.margin.px]="exibirImagem"
+        alt="imagens dos participantes dos eventos">
       </td>
       <!-- Interpolação -->
       <td>{{evento.id}}</td>
@@ -58,29 +70,30 @@
         <div class="btn-group">
           <button type="button" class="btn btn-primary btn-sm mr-2" tooltip="Editar">
             <i class="fa fa-edit"></i></button>
-          <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
-            <i class="fa fa-trash"></i></button>
-        </div>
+            <button type="button" class="btn btn-danger btn-sm" tooltip="Excluir" (click)="openModal(template)">
+              <i class="fa fa-trash"></i></button>
+            </div>
 
-      </td>
-      <!--  -->
-    </tr>
-  </tbody>
-  <tfoot *ngIf="!eventos.length">
-    <tr>
-      <td colspan="8" class="text-center">
-        <h4>Nenhum evento encontrado!</h4>
-      </td>
-    </tr>
-  </tfoot>
-</table>
-
-<!-- {{eventos | json}} -->
-
-<ng-template #template>
-  <div class="modal-body text-center">
-    <p>Tem certeza que quer Deletar este evento?</p>
-    <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
-    <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+          </td>
+          <!--  -->
+        </tr>
+      </tbody>
+      <tfoot *ngIf="!eventos.length">
+        <tr>
+          <td colspan="8" class="text-center">
+            <h4>Nenhum evento encontrado!</h4>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
-</ng-template>
+
+  <!-- {{eventos | json}} -->
+
+  <ng-template #template>
+    <div class="modal-body text-center">
+      <p>Tem certeza que quer Deletar este evento?</p>
+      <button type="button" class="btn btn-default" (click)="confirm()" >Sim</button>
+      <button type="button" class="btn btn-primary" (click)="decline()" >Não</button>
+    </div>
+  </ng-template>
