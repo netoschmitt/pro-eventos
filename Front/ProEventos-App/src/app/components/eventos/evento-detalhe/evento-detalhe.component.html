@@ -5,10 +5,16 @@
       <div class="form-row">
         <div class="form-group col-md-12">
           <label>Tema</label>
-          <input type="text" class="form-control is-invalid" formControlName="tema" placeholder="Insira o Tema">
-          <div class="invalid-feedback">Tema é obrigatorio</div><!-- invalid feedback-validaçao -->
+          <input type="text" class="form-control "
+          [ngClass]="{'is-invalid': form.get('tema').errors && form.get('tema').touched }"
+          formControlName="tema" placeholder="Insira o Tema">
+          <!-- copia as propriedades do validator ts -->
+          <div *ngIf="form.get('tema').hasError('required')" class="invalid-feedback">Tema é obrigatorio</div>                   <!-- invalid feedback-validaçao -->
+          <div *ngIf="form.get('tema').hasError('minlength')" class="invalid-feedback">Tema deve ter no minimmo 4 caracteres</div><!-- invalid feedback-validaçao -->
+          <div *ngIf="form.get('tema').hasError('maxlength')" class="invalid-feedback">Tema deve ter no máximo 50 caracteres</div><!-- invalid feedback-validaçao -->
         </div>
       </div>
+      
       <div class="form-row">
         <div class="form-group col-md-8">
           <label>Local</label>
