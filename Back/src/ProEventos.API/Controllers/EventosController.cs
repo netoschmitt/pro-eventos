@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.Application.Contratos;
 using ProEventos.Domain;
+using ProEventos.API.Dtos;
 
 namespace ProEventos.API.Controllers
 {
@@ -26,10 +28,29 @@ namespace ProEventos.API.Controllers
         {
             try
             {
+                // em todos getAllEventosAsync(), eu atribui para var eventos
                 var eventos = await this.eventoService.GetAllEventosAsync(true);
+                // se eventos for null ou nao for encontrado return NotFound...
                 if (eventos == null) return NotFound("Nenhum evento encontrado.");
+                // criei uma listagem desse EventosDTO
+                var eventosRetorno = new List<EventoDto>();
 
-                return Ok(eventos);
+                foreach (var evento in eventos)
+                {
+                    // criada uma nova listagem Dto baseado nos campos abaixo 
+                    eventosRetorno.Add(new EventoDto(){
+                        Id = evento.Id,
+                        Local = evento.Local,
+                        DataEvento = evento.DataEvento.ToString(),
+                        Tema = evento.Tema,
+                        QtdPessoas = evento.QtdPessoas,
+                        ImagemURL = evento.ImagemURL,
+                        Telefone = evento.Telefone,
+                        Email = evento.Email,
+                    });
+                }
+                // agora eu tenho um dto sendo retornado,assim nao estou exponho exatamente aquilo que o meu doninio tem, para aquele que consumir minha api 
+                return Ok(eventosRetorno);
             }
             catch (Exception ex)
             {
