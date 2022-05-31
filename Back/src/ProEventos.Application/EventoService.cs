@@ -12,21 +12,21 @@ namespace ProEventos.Application
     {
         private readonly IGeralPersist _geralPersist;
         private readonly IEventoPersist _eventoPersist;
-        private readonly IMapper mapper;
+        private readonly IMapper _mapper;
         public EventoService(IGeralPersist geralPersist,
                              IEventoPersist eventoPersist,
                              IMapper mapper)
         {
             _geralPersist = geralPersist;
             _eventoPersist = eventoPersist;
-            this.mapper = mapper;
+            _mapper = mapper;
         }
 
     public async Task<EventoDto> AddEventos(EventoDto model)
     {
         try
         {
-            var evento = mapper.Map<Evento>(model);
+            var evento = _mapper.Map<Evento>(model);
 
             _geralPersist.Add<Evento>(evento);
 
@@ -34,7 +34,7 @@ namespace ProEventos.Application
             {
                 var eventoRetorno = await _eventoPersist.GetEventoByIdAsync(evento.Id, false);
 
-                return mapper.Map<EventoDto>(eventoRetorno);
+                return _mapper.Map<EventoDto>(eventoRetorno);
             }
             return null;
         }
@@ -48,28 +48,33 @@ namespace ProEventos.Application
 
     public async Task<EventoDto> UpdateEvento(int eventoId, EventoDto model)
     {
-        return null;
+        
+        try
+        {
+            var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
+            if (evento == null) return null;
 
-        // try
-        // {
-        //     var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, false);
-        //     if (evento == null) return null;
+            model.Id = evento.Id;
 
-        //     model.Id = evento.Id;
+            // mapeando do model com destino para o evento (obj para obj)
+            _mapper.Map(model, evento);
 
-        //     _geralPersist.Update(model);
-        //     if (await _geralPersist.SaveChangesAsync())
-        //     {
-        //         return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
-        //     }
-        //     return null;
+            _geralPersist.Update<Evento>(evento);
 
-        // }
-        // catch (Exception ex)
-        // {
+            if (await _geralPersist.SaveChangesAsync())
+            {
+                var eventoRetorno =  await _eventoPersist.GetEventoByIdAsync(evento.Id, false);
 
-        //     throw new Exception(ex.Message);
-        // }
+                return _mapper.Map<EventoDto>(eventoRetorno);
+            }
+            return null;
+
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
     }
 
     public async Task<bool> DeleteEvento(int eventoId)
@@ -96,7 +101,7 @@ namespace ProEventos.Application
             var eventos = await _eventoPersist.GetAllEventosAsync(includePalestrantes);
             if (eventos == null) return null;
 
-            var resultado = mapper.Map<EventoDto[]>(eventos);
+            var resultado = _mapper.Map<EventoDto[]>(eventos);
 
             return resultado;
         }
@@ -114,7 +119,7 @@ namespace ProEventos.Application
             var eventos = await _eventoPersist.GetAllEventosByTemaAsync(tema, includePalestrantes);
             if (eventos == null) return null;
 
-            var resultado = mapper.Map<EventoDto[]>(eventos);
+            var resultado = _mapper.Map<EventoDto[]>(eventos);
 
             return resultado;
         }
@@ -132,7 +137,7 @@ namespace ProEventos.Application
             var evento = await _eventoPersist.GetEventoByIdAsync(eventoId, includePalestrantes);
             if (evento == null) return null;
             // eu quero mapear o meu evento dado meu obj EventoDto
-            var resultado = mapper.Map<EventoDto>(evento);
+            var resultado = _mapper.Map<EventoDto>(evento);
 
 
             /* // mapeamento feito na mao
