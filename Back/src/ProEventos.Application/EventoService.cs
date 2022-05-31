@@ -24,21 +24,25 @@ namespace ProEventos.Application
 
     public async Task<EventoDto> AddEventos(EventoDto model)
     {
-        return null;
-        // try
-        // {
-        //     _geralPersist.Add<Evento>(model);
-        //     if (await _geralPersist.SaveChangesAsync())
-        //     {
-        //         return await _eventoPersist.GetEventoByIdAsync(model.Id, false);
-        //     }
-        //     return null;
-        // }
-        // catch (Exception ex)
-        // {
+        try
+        {
+            var evento = mapper.Map<Evento>(model);
 
-        //     throw new Exception(ex.Message);
-        // }
+            _geralPersist.Add<Evento>(evento);
+
+            if (await _geralPersist.SaveChangesAsync())
+            {
+                var eventoRetorno = await _eventoPersist.GetEventoByIdAsync(evento.Id, false);
+
+                return mapper.Map<EventoDto>(eventoRetorno);
+            }
+            return null;
+        }
+        catch (Exception ex)
+        {
+
+            throw new Exception(ex.Message);
+        }
     }
 
 
