@@ -23,14 +23,17 @@
           <label>Local</label>
           <input type="text" class="form-control" [ngClass]="cssValidator(f.local)"
           formControlName="local" placeholder="Insira o Local">
-        <div *ngIf="f.local.errors?.required && f.local.touched" class="invalid-feedback">Local é obrigatório</div>
+          <div *ngIf="f.local.errors?.required && f.local.touched" class="invalid-feedback">Local é obrigatório</div>
         </div>
 
         <div class="form-group col-md-4">
           <label>Data e Hora</label>
-          <input type="datetime" class="form-control" [ngClass]="cssValidator(f.dataEvento)"
-          formControlName="dataEvento" placeholder="">
-        <div *ngIf="f.dataEvento.errors?.required && f.dataEvento.touched" class="invalid-feedback">Data e Hora é obrigatório</div>
+          <input type="datetime" class="form-control"
+          [ngClass]="cssValidator(f.dataEvento)"
+          bsDatepicker
+          [bsConfig]="bsConfig"
+          formControlName="dataEvento"  >
+          <div *ngIf="f.dataEvento.errors?.required && f.dataEvento.touched" class="invalid-feedback">Data e Hora é obrigatório</div>
         </div>
       </div>
 

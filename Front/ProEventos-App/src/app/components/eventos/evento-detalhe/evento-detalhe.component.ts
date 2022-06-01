@@ -13,6 +13,15 @@ export class EventoDetalheComponent implements OnInit {
   get f(): any {
     return this.form.controls;
   }
+
+  get bsConfig(): any {
+    return {
+      adaptivePosition: true,
+      dateInputFormat: 'DD/MM/YYYY hh:mm a',
+      containerClass: 'theme-default',
+      showWeekNumbers: false
+    };
+  }
   constructor(private fb: FormBuilder) { }
 
   ngOnInit(): void {
@@ -38,5 +47,7 @@ export class EventoDetalheComponent implements OnInit {
   public cssValidator(campoForm: FormControl): any {
     return {'is-invalid': campoForm.errors && campoForm.touched};
   }
+
+
 
 }
