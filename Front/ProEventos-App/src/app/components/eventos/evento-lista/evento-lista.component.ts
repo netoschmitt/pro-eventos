@@ -52,14 +52,14 @@ export class EventoListaComponent implements OnInit {
 
   public ngOnInit(): void {
     this.spinner.show();
-    this.getEventos();
+    this.carregarEventos();
   }
 
   public alterarImagem(): void {
     this.exibirImagem = !this.exibirImagem;
   }
 
-  public getEventos(): void {
+  public carregarEventos(): void {
     this.eventoService.getEventos().subscribe({
       next: (response: Evento[]) => {
         this.eventos = response;
@@ -82,7 +82,24 @@ export class EventoListaComponent implements OnInit {
 
   confirm(): void {
     this.modalRef.hide();
-    this.toastr.success('o Evento foi deletado com sucesso.', 'Deletado!');
+    this.spinner.show();
+
+    this.eventoService.deleteEvento(this.eventoId).subscribe(
+      (result: string) => {
+        if (result === 'Deletado') {
+          this.toastr.success('o Evento foi deletado com sucesso.', 'Deletado!');
+          this.spinner.hide();
+          this.carregarEventos();
+        }
+      },
+      (error: any) => {
+        console.error(error);
+        this.toastr.error(`Erro ao tentar deletar o evento ${this.eventoId}`, 'Erro!');
+        this.spinner.hide();
+      },
+      () => this.spinner.hide(),
+    );
+
   }
 
   decline(): void {
