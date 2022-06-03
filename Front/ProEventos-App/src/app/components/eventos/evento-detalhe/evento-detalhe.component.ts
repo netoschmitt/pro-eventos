@@ -95,33 +95,19 @@ export class EventoDetalheComponent implements OnInit {
     public salvarAlteracao(): void {
       this.spinner.show();
       if (this.form.valid) {
+        this.evento = (this.estadoSalvar === 'post')
+                      ? { ...this.form.value }
+                      : {id: this.evento.id, ...this.form.value };
 
-
-        if (this.estadoSalvar === 'post') {
-          // spread operator | o form.value = campos formulario.
-          this.evento = { ...this.form.value };
-          this.eventoService.postEvento(this.evento).subscribe(
-            () => this.toastr.success('Evento salvo com Sucesso!', 'Sucesso'),
-            (error: any) => {
-              console.error(error);
-              this.spinner.hide();
-              this.toastr.error('Erro ao salvar evento', 'Erro');
-            },
-            () => this.spinner.hide()
-          );
-        } else {
-          // spread operator | form.value | mais o id do evento.
-          this.evento = {id: this.evento.id, ...this.form.value };
-          this.eventoService.putEvento(this.evento.id, this.evento).subscribe(
-            () => this.toastr.success('Evento salvo com Sucesso!', 'Sucesso'),
-            (error: any) => {
-              console.error(error);
-              this.spinner.hide();
-              this.toastr.error('Erro ao salvar evento', 'Erro');
-            },
-            () => this.spinner.hide()
-          );
-        }
+        this.eventoService[this.estadoSalvar](this.evento).subscribe(
+          () => this.toastr.success('Evento salvo com Sucesso!', 'Sucesso'),
+          (error: any) => {
+            console.error(error);
+            this.spinner.hide();
+            this.toastr.error('Erro ao salvar evento', 'Erro');
+          },
+          () => this.spinner.hide()
+        );
       }
     }
  }
