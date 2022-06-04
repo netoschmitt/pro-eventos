@@ -5,7 +5,7 @@ namespace ProEventos.Application.Contratos
 {
     public interface ILoteService
     {
-        Task<LoteDto> SaveLote(int eventoId, LoteDto[] models);
+        Task<LoteDto> SaveLotes(int eventoId, LoteDto[] models);
         Task<bool> DeleteEvento(int eventoId, int loteId);
 
         Task<LoteDto[]> GetLotesByEventoIdAsync(int eventoId);
