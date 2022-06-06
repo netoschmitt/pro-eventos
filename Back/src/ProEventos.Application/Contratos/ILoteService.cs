@@ -10,6 +10,5 @@ namespace ProEventos.Application.Contratos
 
         Task<LoteDto[]> GetLotesByEventoIdAsync(int eventoId);
         Task<LoteDto> GetLoteByIdsAsync(int eventoId, int loteId);
-
     }
-}
+} 

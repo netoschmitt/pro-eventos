@@ -1,8 +1,7 @@
+using System;
 using AutoMapper;
 using ProEventos.Application.Dtos;
 using ProEventos.Domain;
-
-
 namespace ProEventos.API.Helpers
 {
     public class ProEventosProfile : Profile
@@ -12,7 +11,7 @@ namespace ProEventos.API.Helpers
             CreateMap<Evento, EventoDto>().ReverseMap();
             CreateMap<Lote, LoteDto>().ReverseMap();
             CreateMap<RedeSocial, RedeSocialDto>().ReverseMap();
-            CreateMap<PalestranteEvento, PalestranteEventoDto>().ReverseMap();
+            CreateMap<Palestrante, PalestranteEventoDto>().ReverseMap();
         }
     }
 }
