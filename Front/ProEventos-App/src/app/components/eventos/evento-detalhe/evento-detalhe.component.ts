@@ -74,15 +74,29 @@ export class EventoDetalheComponent implements OnInit {
           (evento: Evento) => {
             this.evento = {...evento};
             this.form.patchValue(this.evento);
+            this.carregarLotes();
           },
           (error: any) => {
-            this.spinner.hide();
             this.toastr.error('Erro ao tentar carregar Evento.', 'Erro!');
-            console.error();
-          },
-          () => this.spinner.hide(),
-        );
+            console.error(error);
+          }
+        ).add(() => this.spinner.hide());
       }
+    }
+    
+    /* fazendo mais uma requisiçao ao banco exemplo */
+    public carregarLotes(): void {
+      this.loteService.getLotesByEventoId(this.eventoId).subscribe(
+        (lotesRetorno: Lote[]) => {
+          lotesRetorno.forEach(lote => {
+            this.lotes.push(this.criarLote(lote));
+          });
+        },
+        (error: any) => {
+          this.toastr.error('Erro ao tentar carregar lotes', 'Erro');
+          console.error(error);
+        },
+      ).add(() => this.spinner.hide());
     }
 
     ngOnInit(): void {
