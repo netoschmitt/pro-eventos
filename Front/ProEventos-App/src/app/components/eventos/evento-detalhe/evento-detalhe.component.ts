@@ -1,7 +1,7 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl,
-  FormArray,
+         FormArray,
          FormBuilder,
          FormControl,
          FormGroup,
@@ -52,6 +52,15 @@ export class EventoDetalheComponent implements OnInit {
       showWeekNumbers: false
     };
   }
+  get bsConfigLote(): any {
+    return {
+      adaptivePosition: true,
+      dateInputFormat: 'DD/MM/YYYY',
+      containerClass: 'theme-default',
+      showWeekNumbers: false
+    };
+  }
+
   constructor(private fb: FormBuilder,
               private localeService: BsLocaleService,
               private activatedRouter: ActivatedRoute,
@@ -122,7 +131,7 @@ export class EventoDetalheComponent implements OnInit {
 
     adicionarLote(): void {
       this.lotes.push(this.criarLote({id: 0} as Lote));
-      }
+    }
 
     criarLote(lote: Lote): FormGroup {
       return this.fb.group({
@@ -146,6 +155,7 @@ export class EventoDetalheComponent implements OnInit {
     public salvarEvento(): void {
       this.spinner.show();
       if (this.form.valid) {
+
         this.evento = (this.estadoSalvar === 'post')
                       ? { ...this.form.value }
                       : {id: this.evento.id, ...this.form.value };
@@ -167,8 +177,8 @@ export class EventoDetalheComponent implements OnInit {
     }
 
     public salvarLotes(): void {
-      this.spinner.show();
       if (this.form.controls.lotes.valid) {
+        this.spinner.show();
         this.loteService.saveLote(this.eventoId, this.form.value.lotes)
         .subscribe(
           () => {
@@ -186,33 +196,32 @@ export class EventoDetalheComponent implements OnInit {
     public removerLote(template: TemplateRef<any>,
                        indice: number): void {
 
-      this.loteAtual.id = this.lotes.get(indice + '.id').value;
-      this.loteAtual.nome = this.lotes.get(indice + '.nome').value;
-      this.loteAtual.indice = indice;
+       this.loteAtual.id = this.lotes.get(indice + '.id').value;
+       this.loteAtual.nome = this.lotes.get(indice + '.nome').value;
+       this.loteAtual.indice = indice;
+       this.modalRef = this.modalService.show(template, {class: 'modal-sm' });
+      }
 
-      this.modalRef = this.modalService.show(template, {class: 'modal-sm' });
-    }
 
-    confirmDeleteLote(): void {
-      this.modalRef.hide();
-      this.spinner.show();
+   confirmDeleteLote(): void {
+    this.modalRef.hide();
+    this.spinner.show();
 
-      this.loteService.deleteLote(this.eventoId, this.loteAtual.id)
-        .subscribe(
-          () => {
-            this.toastr.success('Lote deletado com sucesso', 'Sucesso')
-            this.lotes.removeAt(this.loteAtual.indice);
+    this.loteService.deleteLote(this.eventoId, this.loteAtual.id)
+      .subscribe(
+        () => {
+          this.toastr.success('Lote deletado com sucesso', 'Sucesso');
+          this.lotes.removeAt(this.loteAtual.indice);
+        },
+        (error: any) => {
+          this.toastr.error(`Erro ao tentar deletar o Lote ${this.loteAtual.id}`, 'Erro');
+          console.error(error);
+        }
+      ).add(() => this.spinner.hide());
+  }
 
-          },
-          (error: any) => {
-            this.toastr.error(`Erro ao tentar deletar o Lote ${this.loteAtual.id}`, 'Erro');
-            console.error(error);
-          }
-        ).add(() => this.spinner.hide());
-    }
+  declineDeleteLote(): void {
+    this.modalRef.hide();
+  }
 
-    declineDeleteLote(): void {
-      this.modalRef.hide();
-    }
 }
-
