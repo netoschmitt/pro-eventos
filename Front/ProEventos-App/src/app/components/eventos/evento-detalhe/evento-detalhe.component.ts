@@ -52,14 +52,7 @@ export class EventoDetalheComponent implements OnInit {
       showWeekNumbers: false
     };
   }
-  get bsConfigLote(): any {
-    return {
-      adaptivePosition: true,
-      dateInputFormat: 'DD/MM/YYYY',
-      containerClass: 'theme-default',
-      showWeekNumbers: false
-    };
-  }
+
 
   constructor(private fb: FormBuilder,
               private localeService: BsLocaleService,
@@ -142,6 +135,10 @@ export class EventoDetalheComponent implements OnInit {
         dataInicio: [lote.dataInicio],
         dataFim: [lote.dataFim],
       });
+    }
+
+    public mudarValorData(value: Date, indice: number, campo: string): void {
+      this.lotes.value[indice][campo] = value;
     }
 
     public resetForm(): void {
