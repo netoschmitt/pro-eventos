@@ -30,7 +30,7 @@ export class EventoDetalheComponent implements OnInit {
   evento = {} as Evento;
   form: FormGroup;
   estadoSalvar = 'post';
-  loteAtual = {id: 0, nome: '', indice: 0}
+  loteAtual = {id: 0, nome: '', indice: 0};
 
   get modoEditar(): boolean {
     return this.estadoSalvar === 'put';
@@ -139,6 +139,10 @@ export class EventoDetalheComponent implements OnInit {
 
     public mudarValorData(value: Date, indice: number, campo: string): void {
       this.lotes.value[indice][campo] = value;
+    }
+
+    retornaTituloLote(nome: string): string {
+      return nome === null || nome === '' ? 'Nome do Lote' : nome;
     }
 
     public resetForm(): void {
