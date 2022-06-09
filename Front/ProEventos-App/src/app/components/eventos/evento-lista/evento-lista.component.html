@@ -50,7 +50,8 @@
         <!-- Properties Bindings -->
         <img [collapse]="!exibirImagem"
         [isAnimated]="true"
-        src="/assets/{{evento.imagemURL}}"
+        
+        [src]="mostraImagem(evento.imagemURL)"
         [style.width.px]="larguraImagem"
         [style.margin.px]="exibirImagem"
         alt="imagens dos participantes dos eventos">

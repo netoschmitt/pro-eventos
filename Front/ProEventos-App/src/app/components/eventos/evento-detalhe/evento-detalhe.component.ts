@@ -13,10 +13,12 @@ import { BsLocaleService } from 'ngx-bootstrap/datepicker';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
-import { Evento } from '@app/models/Evento';
-import { EventoService } from './../../../services/evento.service';
-import { Lote } from '@app/models/Lote';
 import { LoteService } from './../../../services/lote.service';
+import { EventoService } from './../../../services/evento.service';
+import { Evento } from '@app/models/Evento';
+import { Lote } from '@app/models/Lote';
+import { DatePipe } from '@angular/common';
+import { environment } from '@environments/environment';
 
 
 @Component({
@@ -80,17 +82,22 @@ export class EventoDetalheComponent implements OnInit {
 
         this.estadoSalvar = 'put';
 
-        this.eventoService.getEventoById(this.eventoId).subscribe(
-          (evento: Evento) => {
-            this.evento = {...evento};
-            this.form.patchValue(this.evento);
-            this.carregarLotes();
-          },
-          (error: any) => {
-            this.toastr.error('Erro ao tentar carregar Evento.', 'Erro!');
-            console.error(error);
-          }
-        ).add(() => this.spinner.hide());
+        this.eventoService
+          .getEventoById(this.eventoId)
+          .subscribe(
+            (evento: Evento) => {
+              this.evento = { ...evento };
+              this.form.patchValue(this.evento);
+              if (this.evento.imagemURL !== '') {
+                  this.imagemURL = environment.apiURL + 'resources/images/' + this.evento.imagemURL;
+                }
+              this.carregarLotes();
+            },
+            (error: any) => {
+              this.toastr.error('Erro ao tentar carregar Evento.', 'Erro!');
+              console.error(error);
+            }
+          ).add(() => this.spinner.hide());
       }
     }
 
@@ -122,7 +129,7 @@ export class EventoDetalheComponent implements OnInit {
         qtdPessoas: ['', [Validators.required, Validators.max(120000)]],
         telefone: ['', Validators.required],
         email: ['', [Validators.required, Validators.email]],
-        imagemURL: ['', Validators.required],
+        imagemURL: [''],
         lotes: this.fb.array([])
       });
     }

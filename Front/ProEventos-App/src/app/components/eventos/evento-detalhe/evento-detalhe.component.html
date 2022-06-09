@@ -45,7 +45,7 @@
             <div *ngIf="f.qtdPessoas.errors?.max" class="invalid-feedback">Qtd max Pessoas é 120000</div>
             </div>
 
-            <div class="form-group col-md-2">
+            <div class="form-group col-md-4">
               <label>Telefone</label>
               <input type="text" class="form-control" [ngClass]="cssValidator(f.telefone)"
               formControlName="telefone" placeholder="(000) 90000-0000">
@@ -53,7 +53,7 @@
             class="invalid-feedback">Telefone é obrigatório</div>
             </div>
 
-            <div class="form-group col-md-4">
+            <div class="form-group col-md-6">
               <label>e-mail</label>
               <input type="email" class="form-control" [ngClass]="cssValidator(f.email)"
               formControlName="email" placeholder="e-mail">
@@ -61,13 +61,14 @@
             <div *ngIf="f.email.errors?.email" class="invalid-feedback">e-mail deve ser válido</div>
             </div>
 
-            <div class="form-group col-md-4">
+            <!-- <div class="form-group col-md-4">
               <label>Imagem</label>
               <input type="text" class="form-control" [ngClass]="cssValidator(f.imagemURL)"
               formControlName="imagemURL" placeholder="imagem">
             <div *ngIf="f.imagemURL.errors?.required && f.imagemURL.touched"
             class="invalid-feedback">Imagem é obrigatório</div>
-            </div>
+            </div> -->
+
           </div>
         </div>
         <div class="card-footer">
@@ -76,7 +77,6 @@
               Cancelar Alteração
             </button>
             <button class="btn btn-success" [disabled]="!form.valid" (click)="salvarEvento()">
-               <!-- <span class="spinner-border spinner-border-sm mr-1"></span> -->
               Salvar Evento
             </button>
           </div>
@@ -186,7 +186,6 @@
   </div>
 
   <div class="col-md-4" *ngIf="modoEditar">
-
     <div [formGroup]="form" class="card-evento-view shadow-sm">
       <div class="form-row">
         <div class="form-group m-0">
