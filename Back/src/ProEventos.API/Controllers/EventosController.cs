@@ -92,7 +92,7 @@ namespace ProEventos.API.Controllers
                     DeleteImage(evento.ImagemURL);
                     evento.ImagemURL = await SaveImage(file);
                 }
-                var EventoRetorno = await this.eventoService.UpdateEvento(eventoId, evento);
+                var EventoRetorno = await eventoService.UpdateEvento(eventoId, evento);
 
                 return Ok(EventoRetorno);
             }
@@ -108,7 +108,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await this.eventoService.AddEventos(model);
+                var evento = await eventoService.AddEventos(model);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -164,7 +164,7 @@ namespace ProEventos.API.Controllers
             string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
                                             .Take(10)
                                             .ToArray()
-                                            ).Replace(' ', '-');
+                                        ).Replace(' ', '-');
 
             imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}";
 

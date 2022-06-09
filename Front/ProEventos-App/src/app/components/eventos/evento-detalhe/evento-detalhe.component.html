@@ -100,10 +100,8 @@
               <div formArrayName="lotes" *ngFor="let lote of lotes.controls; let i=index "> <!-- formArrayName linha 89 .ts -->
                 <fieldset [formGroupName]="i" class="form-group">
                   <legend class="d-flex justify-content-between capitalize">
-                    <div class="retorna-titulo-lote">
-                      {{ retornaTituloLote(lotes.get(i+'.nome').value) }}
-                    </div>
 
+                      {{ retornaTituloLote(lotes.get(i+'.nome').value) }}
 
                     <button (click)="removerLote(template,i)" class="p-2 btn btn-sm btn-outline-warning mb-1 d-flex"
                       tooltip="Excluir Lote"

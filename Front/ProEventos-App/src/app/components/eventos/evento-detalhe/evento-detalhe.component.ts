@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit, TemplateRef } from '@angular/core';
 import { AbstractControl,
@@ -30,7 +31,7 @@ export class EventoDetalheComponent implements OnInit {
   evento = {} as Evento;
   form: FormGroup;
   estadoSalvar = 'post';
-  loteAtual = {id: 0, nome: '', indice: 0};
+  loteAtual = { id: 0, nome: '', indice: 0 };
   imagemURL = 'assets/img/upload-cloud.png';
   file: File;
 
@@ -51,20 +52,22 @@ export class EventoDetalheComponent implements OnInit {
       adaptivePosition: true,
       dateInputFormat: 'DD/MM/YYYY hh:mm a',
       containerClass: 'theme-default',
-      showWeekNumbers: false
+      showWeekNumbers: false,
     };
   }
 
 
-  constructor(private fb: FormBuilder,
-              private localeService: BsLocaleService,
-              private activatedRouter: ActivatedRoute,
-              private eventoService: EventoService,
-              private spinner: NgxSpinnerService,
-              private toastr: ToastrService,
-              private modalService: BsModalService,
-              private router: Router,
-              private loteService: LoteService)
+  constructor(
+     private fb: FormBuilder,
+     private localeService: BsLocaleService,
+     private activatedRouter: ActivatedRoute,
+     private eventoService: EventoService,
+     private spinner: NgxSpinnerService,
+     private toastr: ToastrService,
+     private modalService: BsModalService,
+     private router: Router,
+     private loteService: LoteService
+     )
     {
       this.localeService.use('pt-br');
     }
@@ -226,7 +229,7 @@ export class EventoDetalheComponent implements OnInit {
   declineDeleteLote(): void {
     this.modalRef.hide();
   }
-  
+
   onFileChange(ev: any): void {
     const reader = new FileReader();
 
@@ -234,6 +237,22 @@ export class EventoDetalheComponent implements OnInit {
 
     this.file = ev.target.files;
     reader.readAsDataURL(this.file[0]);
+
+    this.uploadImagem();
+  }
+
+  uploadImagem(): void {
+    this.spinner.show();
+    this.eventoService.postUpload(this.eventoId, this.file).subscribe(
+      () => {
+        this.router.navigate([`eventos/detalhe/${this.eventoId}`]);
+        this.toastr.success('Imagem atualizada com Sucesso', 'Sucesso!');
+      },
+      (error: any) => {
+        this.toastr.error('Erro ao fazer upload de imagem', 'Erro!!');
+        console.log(error);
+      }
+    ).add(() => this.spinner.hide());
   }
 
 }
