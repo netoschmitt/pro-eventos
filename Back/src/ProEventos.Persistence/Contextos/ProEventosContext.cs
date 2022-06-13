@@ -6,12 +6,9 @@ using ProEventos.Domain.Identity;
 
 namespace ProEventos.Persistence.Contextos
 {
-    public class ProEventosContext : IdentityDbContext<IdentityDbContext<User, Role, int,
-                                                                        IdentityUserClaim<int>,
-                                                                        IdentityUserRole<int>,
-                                                                        IdentityUserLogin<int>, 
-                                                                        IdentityRoleClaim<int>, 
-                                                                        IdentityUserToken<int>>
+    public class ProEventosContext : IdentityDbContext<User, Role, int,
+                                                        IdentityUserClaim<int>, IdentityUserRole<int>,IdentityUserLogin<int>, 
+                                                        IdentityRoleClaim<int>,IdentityUserToken<int>>
     {
         public ProEventosContext(DbContextOptions<ProEventosContext> options)
          : base(options) { }
@@ -22,8 +19,28 @@ namespace ProEventos.Persistence.Contextos
         public DbSet<PalestranteEvento> PalestrantesEventos { get; set; }
         public DbSet<RedeSocial> RedeSociais { get; set; }
 
-        /* associaçao classe PalestranteEvento - junçao entre os eventos e palestrantes */
+        /* associaçao classe PalestranteEvento */
         protected override void  OnModelCreating(ModelBuilder modelBuilder) {
+            // importante
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<UserRole>(UserRole => 
+                {
+                    UserRole.HasKey(ur => new { ur.UserId, ur.RoleId}); 
+                        // UserRole tem uma role, com muitos UserRoles e RoleID como ForeignKey e é requerido
+                    UserRole.HasOne(ur => ur.Role)
+                            .WithMany(r => r.UserRoles)
+                            .HasForeignKey(ur => ur.RoleId)
+                            .IsRequired();
+
+                    UserRole.HasOne(ur => ur.User)
+                            .WithMany(r => r.UserRoles)
+                            .HasForeignKey(ur => ur.UserId)
+                            .IsRequired();
+                }
+            );
+
+
             modelBuilder.Entity<PalestranteEvento>()
             .HasKey(PE => new {PE.EventoId, PE.PalestranteId});
 
