@@ -63,7 +63,12 @@ namespace ProEventos.Application
         }
     }
 
-    public async Task<UserUpdateDto> GetUserByUserNameAsync(string userName)
+        public Task<UserDto> CreateAccountAsync(UnobservedTaskExceptionEventArgs userDto)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public async Task<UserUpdateDto> GetUserByUserNameAsync(string userName)
     {
         try
         {
@@ -84,11 +89,27 @@ namespace ProEventos.Application
     {
         try
         {
+            var user = await _userPersist.GetUserByUserNameAsync(userUpdateDto.UserName);
+            if (user == null) return null;
+
+            _mapper.Map(userUpdateDto, user);
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var result = await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
+
+            _userPersist.Update<User>(user);
+
+            if(await _userPersist.SaveChangesAsync()) 
+            {
+                var userRetorno = await _userPersist.GetUserByUserNameAsync(user.UserName);
+
+                return _mapper.Map<UserUpdateDto>(userRetorno);
+            }
             
+            return null;
         }
         catch (System.Exception ex)
         {
-            
             throw new System.Exception($"Erro ao tentar atualizar conta de usuário Erro: {ex.Message}");
         }
     }
