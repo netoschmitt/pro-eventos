@@ -23,17 +23,19 @@ namespace ProEventos.API.Controllers
             _tokenService = tokenService;
         }
 
-        [HttpGet("GetUser")]
-        public async Task<IActionResult> GetUser()
+        [HttpGet("GetUser/{userName}")]
+        [AllowAnonymous]
+        public async Task<IActionResult> GetUser(string userName)
         {
             try
             {
-                
+                var user = await _accontService.GetUserByUserNameAsync(userName);
+                return Ok(user);
             }
             catch (Exception ex)
             { 
-                return Task.FromResult(this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar recuperar Usuário. Erro: {ex.Message}"));
+                return this.StatusCode(StatusCodes.Status500InternalServerError,
+                $"Erro ao tentar recuperar Usuário. Erro: {ex.Message}");
             }
         }
     }
