@@ -1,4 +1,9 @@
-# ProEventosApp
+## ProEventosApp
+
+Repo app web para gerenciamento de eventos, o projeto serve ao usuário os registros necessários para organização desses eventos. 
+ - db relacional
+ - Backend desenvolvido com ASP.NET Core WebAPI
+ - Frontend com Angular CLI
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 11.2.19.
 
