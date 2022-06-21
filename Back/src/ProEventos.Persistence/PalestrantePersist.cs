@@ -117,14 +117,16 @@ namespace ProEventos.Persistence
             IQueryable<Palestrante> query = _context.Palestrantes
             .Include(p => p.RedesSociais);
             
-            if(includeEventos) {
+            if(includeEventos) 
+            {
                 query = query
-                .Include(p => p.PalestrantesEventos)
-                .ThenInclude(pe => pe.Evento);
+                    .Include(p => p.PalestrantesEventos)
+                    .ThenInclude(pe => pe.Evento);
             }
 
-            query = query.OrderBy(p => p.Id)
+            query = query.AsNoTracking().OrderBy(p => p.Id)
                         .Where(p => p.User.PrimeiroNome.ToLower().Contains(nome.ToLower()));
+                                    
 
             return await query.ToArrayAsync();
         }

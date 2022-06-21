@@ -19,21 +19,20 @@ namespace ProEventos.Persistence.Contextos
         public DbSet<PalestranteEvento> PalestrantesEventos { get; set; }
         public DbSet<RedeSocial> RedeSociais { get; set; }
 
-        /* associaçao classe PalestranteEvento */
         protected override void  OnModelCreating(ModelBuilder modelBuilder) {
-            // importante
+            
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserRole>(UserRole => 
+            modelBuilder.Entity<UserRole>(userRole => 
                 {
-                    UserRole.HasKey(ur => new { ur.UserId, ur.RoleId}); 
+                    userRole.HasKey(ur => new { ur.UserId, ur.RoleId});
                         // UserRole tem uma role, com muitos UserRoles e RoleID como ForeignKey e é requerido
-                    UserRole.HasOne(ur => ur.Role)
+                    userRole.HasOne(ur => ur.Role)
                             .WithMany(r => r.UserRoles)
                             .HasForeignKey(ur => ur.RoleId)
                             .IsRequired();
 
-                    UserRole.HasOne(ur => ur.User)
+                    userRole.HasOne(ur => ur.User)
                             .WithMany(r => r.UserRoles)
                             .HasForeignKey(ur => ur.UserId)
                             .IsRequired();
@@ -42,7 +41,7 @@ namespace ProEventos.Persistence.Contextos
 
 
             modelBuilder.Entity<PalestranteEvento>()
-            .HasKey(PE => new {PE.EventoId, PE.PalestranteId});
+                .HasKey(PE => new {PE.EventoId, PE.PalestranteId});
 
             //modelbuilder... tem uma entidade chamada evento -> e 
             // este evento tem muitas redes socials

@@ -16,7 +16,7 @@ namespace ProEventos.Persistence
             _context = context;
         }
        
-        public async Task<IEnumerable<User>> GetUserAsync()
+        public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();
         }
