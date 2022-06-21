@@ -20,7 +20,6 @@ namespace ProEventos.Application
         private readonly IConfiguration _config;
         private readonly UserManager<User> _userManager;
         private readonly IMapper _mapper;
-
         public readonly SymmetricSecurityKey _key;
 
         public TokenService(IConfiguration config,
