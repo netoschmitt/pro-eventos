@@ -2,27 +2,32 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.API.Extensions;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 
 namespace ProEventos.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class EventosController : ControllerBase
     {
+        private readonly IEventoService _eventoService;
+        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IAccountService _accountService;
 
-
-        private readonly IEventoService eventoService;
-        private readonly IWebHostEnvironment hostEnvironment;
-
-        public EventosController(IEventoService eventoService, IWebHostEnvironment hostEnvironment)
+        public EventosController(IEventoService eventoService,
+                                 IWebHostEnvironment hostEnvironment,
+                                 IAccountService accountService)
         {
-            this.hostEnvironment = hostEnvironment;
-            this.eventoService = eventoService;
+            _hostEnvironment = hostEnvironment;
+            _accountService = accountService;
+            _eventoService = eventoService;
 
         }
 
@@ -32,7 +37,7 @@ namespace ProEventos.API.Controllers
             try
             {
                 // em todos getAllEventosAsync(), eu atribui para var eventos
-                var eventos = await this.eventoService.GetAllEventosAsync(true);
+                var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(), true);
                 // se eventos for null ou nao for encontrado return NotFound...
                 if (eventos == null) return NoContent();
                 return Ok(eventos);
@@ -49,7 +54,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await this.eventoService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), id, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -66,7 +71,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await this.eventoService.GetAllEventosByTemaAsync(tema, true);
+                var evento = await _eventoService.GetAllEventosByTemaAsync(User.GetUserId(), tema, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -83,7 +88,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await this.eventoService.GetEventoByIdAsync(eventoId, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), eventoId, true);
                 if (evento == null) return NoContent();
 
                 var file = Request.Form.Files[0];
@@ -92,7 +97,7 @@ namespace ProEventos.API.Controllers
                     DeleteImage(evento.ImagemURL);
                     evento.ImagemURL = await SaveImage(file);
                 }
-                var EventoRetorno = await eventoService.UpdateEvento(eventoId, evento);
+                var EventoRetorno = await _eventoService.UpdateEvento(User.GetUserId(), eventoId, evento);
 
                 return Ok(EventoRetorno);
             }
@@ -108,7 +113,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await eventoService.AddEventos(model);
+                var evento = await _eventoService.AddEventos(User.GetUserId(), model);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -125,7 +130,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await this.eventoService.UpdateEvento(id, model);
+                var evento = await _eventoService.UpdateEvento(User.GetUserId(), id, model);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -142,10 +147,10 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await this.eventoService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(User.GetUserId(), id, true);
                 if (evento == null) return NoContent();
 
-                if (await this.eventoService.DeleteEvento(id))
+                if (await _eventoService.DeleteEvento(User.GetUserId(), id))
                 {
                     DeleteImage(evento.ImagemURL);
                     return Ok(new { message = "Deletado" });
@@ -154,7 +159,6 @@ namespace ProEventos.API.Controllers
                 {
                     throw new Exception("Ocorreu um problema não especifico ao tentar deletar Evento. ");
                 }
-
             }
             catch (Exception ex)
             {
@@ -168,13 +172,13 @@ namespace ProEventos.API.Controllers
         public async Task<string> SaveImage(IFormFile imageFile)
         {
             string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
-                                            .Take(10)
-                                            .ToArray()
-                                        ).Replace(' ', '-');
+                                              .Take(10)
+                                              .ToArray()
+                                             ).Replace(' ', '-');
 
             imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}";
 
-            var imagePath = Path.Combine(hostEnvironment.ContentRootPath, @"Resources/images", imageName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageName);
 
             using (var fileStream = new FileStream(imagePath, FileMode.Create))
             {
@@ -187,7 +191,7 @@ namespace ProEventos.API.Controllers
         [NonAction]
         public void DeleteImage(string imageName)
         {
-            var imagePath = Path.Combine(hostEnvironment.ContentRootPath, @"Resources/images", imageName);
+            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageName);
             if (System.IO.File.Exists(imagePath))
                 System.IO.File.Delete(imagePath);
         }
