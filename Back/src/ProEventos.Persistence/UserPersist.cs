@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using ProEventos.Domain.Identity;
@@ -11,11 +13,11 @@ namespace ProEventos.Persistence
     {
         private readonly ProEventosContext _context;
 
-        public UserPersist(ProEventosContext context): base(context)
+        public UserPersist(ProEventosContext context) : base(context)
         {
             _context = context;
         }
-       
+
         public async Task<IEnumerable<User>> GetUsersAsync()
         {
             return await _context.Users.ToListAsync();

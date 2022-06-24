@@ -1,4 +1,3 @@
-
 namespace ProEventos.Domain
 {
     public class RedeSocial

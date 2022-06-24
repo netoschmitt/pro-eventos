@@ -20,4 +20,4 @@ namespace ProEventos.Persistence.Contratos
         /// <returns>Apenas 1 lote</returns>
         Task<Lote> GetLoteByIdsAsync(int eventoId, int id);
     }
-} 
+}

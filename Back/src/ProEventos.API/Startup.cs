@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using ProEventos.Application;
@@ -11,15 +10,17 @@ using ProEventos.Application.Contratos;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Contextos;
 using ProEventos.Persistence.Contratos;
+using AutoMapper;
+using System;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 using Microsoft.AspNetCore.Http;
+using System.Text.Json.Serialization;
 using ProEventos.Domain.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IO;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Collections.Generic;
 
 namespace ProEventos.API
@@ -40,13 +41,13 @@ namespace ProEventos.API
                 context => context.UseSqlite(Configuration.GetConnectionString("Default"))
             );
 
-            services.AddIdentityCore<User>(options =>
+            services.AddIdentityCore<User>(options => 
             {
-                    options.Password.RequireDigit = false;
-                    options.Password.RequireNonAlphanumeric = false;
-                    options.Password.RequireLowercase = false;
-                    options.Password.RequireUppercase = false;
-                    options.Password.RequiredLength = 4;
+                options.Password.RequireDigit = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 4;
             })
             .AddRoles<Role>()
             .AddRoleManager<RoleManager<Role>>()
@@ -56,24 +57,23 @@ namespace ProEventos.API
             .AddDefaultTokenProviders();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options => 
+                    .AddJwtBearer(options =>
                     {
                         options.TokenValidationParameters = new TokenValidationParameters
                         {
                             ValidateIssuerSigningKey = true,
-                            IssuerSigningKey =  new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
                             ValidateIssuer = false,
                             ValidateAudience = false
                         };
                     });
 
-
             services.AddControllers()
-                    .AddJsonOptions(options =>
+                    .AddJsonOptions(options => 
                         options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
                     )
-                    .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = 
-                    Newtonsoft.Json.ReferenceLoopHandling.Ignore
+                    .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling =
+                        Newtonsoft.Json.ReferenceLoopHandling.Ignore
                     );
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -88,7 +88,6 @@ namespace ProEventos.API
             services.AddScoped<ILotePersist, LotePersist>();
             services.AddScoped<IUserPersist, UserPersist>();
 
-
             services.AddCors();
             services.AddSwaggerGen(options =>
             {
@@ -96,7 +95,7 @@ namespace ProEventos.API
                 options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Description = @"JWT Authorization header usando Bearer.
-                                Entre com 'Bearer' [espaço] então coloque seu token.
+                                Entre com 'Bearer ' [espaço] então coloque seu token.
                                 Exemplo: 'Bearer 12345abcdef'",
                     Name = "Authorization",
                     In = ParameterLocation.Header,
@@ -106,7 +105,7 @@ namespace ProEventos.API
 
                 options.AddSecurityRequirement(new OpenApiSecurityRequirement() 
                 {
-                   {
+                    {
                         new OpenApiSecurityScheme
                         {
                             Reference = new OpenApiReference
@@ -119,7 +118,7 @@ namespace ProEventos.API
                             In = ParameterLocation.Header
                         },
                         new List<string>()
-                   }
+                    }
                 });
             });
         }

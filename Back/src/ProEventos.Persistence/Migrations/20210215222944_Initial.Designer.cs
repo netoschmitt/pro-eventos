@@ -10,8 +10,8 @@ using ProEventos.Persistence.Contextos;
 namespace ProEventos.Persistence.Migrations
 {
     [DbContext(typeof(ProEventosContext))]
-    [Migration("20220517141807_Inicial")]
-    partial class Inicial
+    [Migration("20210215222944_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -147,7 +147,7 @@ namespace ProEventos.Persistence.Migrations
 
                     b.HasIndex("PalestranteId");
 
-                    b.ToTable("RedeSociais");
+                    b.ToTable("RedesSociais");
                 });
 
             modelBuilder.Entity("ProEventos.Domain.Lote", b =>

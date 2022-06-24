@@ -1,14 +1,14 @@
 ﻿using System;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using ProEventos.API.Extensions;
 using ProEventos.Application.Contratos;
+using Microsoft.AspNetCore.Http;
 using ProEventos.Application.Dtos;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using System.Linq;
+using ProEventos.API.Extensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProEventos.API.Controllers
 {
@@ -28,7 +28,6 @@ namespace ProEventos.API.Controllers
             _hostEnvironment = hostEnvironment;
             _accountService = accountService;
             _eventoService = eventoService;
-
         }
 
         [HttpGet]
@@ -36,16 +35,15 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                // em todos getAllEventosAsync(), eu atribui para var eventos
                 var eventos = await _eventoService.GetAllEventosAsync(User.GetUserId(), true);
-                // se eventos for null ou nao for encontrado return NotFound...
                 if (eventos == null) return NoContent();
+
                 return Ok(eventos);
             }
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
             }
         }
 
@@ -62,7 +60,7 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
             }
         }
 
@@ -79,7 +77,7 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar recuperar eventos. Erro: {ex.Message}");
             }
         }
 
@@ -104,7 +102,7 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
             }
         }
 
@@ -121,7 +119,7 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar adicionar eventos. Erro: {ex.Message}");
             }
         }
 
@@ -138,7 +136,7 @@ namespace ProEventos.API.Controllers
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar atualizar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar atualizar eventos. Erro: {ex.Message}");
             }
         }
 
@@ -157,15 +155,14 @@ namespace ProEventos.API.Controllers
                 }
                 else
                 {
-                    throw new Exception("Ocorreu um problema não especifico ao tentar deletar Evento. ");
+                    throw new Exception("Ocorreu um problem não específico ao tentar deletar Evento.");
                 }
             }
             catch (Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError,
-                $"Erro ao tentar deletar eventos. Erro: {ex.Message}");
+                    $"Erro ao tentar deletar eventos. Erro: {ex.Message}");
             }
-
         }
 
         [NonAction]
@@ -174,7 +171,7 @@ namespace ProEventos.API.Controllers
             string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName)
                                               .Take(10)
                                               .ToArray()
-                                             ).Replace(' ', '-');
+                                         ).Replace(' ', '-');
 
             imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}";
 
@@ -187,7 +184,7 @@ namespace ProEventos.API.Controllers
 
             return imageName;
         }
-        /* nao é um endpoint */
+
         [NonAction]
         public void DeleteImage(string imageName)
         {
