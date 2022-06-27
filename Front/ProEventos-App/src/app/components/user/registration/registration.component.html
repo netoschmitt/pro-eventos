@@ -10,7 +10,7 @@
   <!-- div com form   -->
   <div class="col-md-6">
 
-    <form [formGroup]="form" class="p-1">
+    <form [formGroup]="form" class="p-1" (ngSubmit)="register()">
       <!-- responsividade cabeçalho -->
       <!-- aparece sempre, se form md não. -->
       <div class="pb-2 d-block d-md-none">
@@ -79,7 +79,7 @@
       </div>
       <div class="form-row">
         <div class="form-group col-12">
-          <button class="btn btn-lg btn-success btn-block px-5">
+          <button [disabled]="!form.valid" class="btn btn-lg btn-success btn-block px-5" type="submit">
             Registar
           </button>
         </div>
