@@ -11,7 +11,7 @@ import { environment } from '@environments/environment';
 
   export class EventoService {
     baseURL = environment.apiURL + 'api/eventos';
-    tokenHeader = new HttpHeaders({ Authorization: 'Bearer eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIxIiwidW5pcXVlX25hbWUiOiJhZ25lbG8iLCJuYmYiOjE2NTYzMjg4MTMsImV4cCI6MTY1NjQxNTIxMywiaWF0IjoxNjU2MzI4ODEzfQ.zICwEW9xVDPEToY6oAGUJSutPKtCl71jRyJtj9Dr_LJl_o7yOJcHXFnj2DPFY0OcQnFv4zyxq3Rqxsne1kD4bw' });
+    tokenHeader = new HttpHeaders({ Authorization: `Bearer ${JSON.parse(localStorage.getItem('user')).token}` });
 
     constructor(private http: HttpClient) { }
 
