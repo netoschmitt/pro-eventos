@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Identity;
@@ -89,11 +87,14 @@ namespace ProEventos.Application
                 var user = await _userPersist.GetUserByUserNameAsync(userUpdateDto.UserName);
                 if (user == null) return null;
 
+                userUpdateDto.Id = user.Id;
+
                 _mapper.Map(userUpdateDto, user);
 
+                if (userUpdateDto.Password != null) {
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-                var result = await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
-
+                await _userManager.ResetPasswordAsync(user, token, userUpdateDto.Password);
+                }
                 _userPersist.Update<User>(user);
 
                 if (await _userPersist.SaveChangesAsync())
