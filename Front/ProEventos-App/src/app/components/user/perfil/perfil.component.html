@@ -13,23 +13,24 @@
             </a>
           </div>
           <div class="card-body">
-            <div class="h4 text-center mb-3">@UserName</div>
-            <div class="h7 text-bold pb-1"><b>Nome:</b> Neto Schmitt</div>
+            <div class="h4 text-center mb-3">{{f.userName.f}}</div>
+            <div class="h7 text-bold pb-1"><b>Nome:</b> {{f.firstName.value + ' ' + f.lastName.value}}</div>
             <div class="h7">
-              Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
-              etc.
+              {{f.description.value}}
+              <!-- Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
+              etc. -->
             </div>
           </div>
           <ul class="list-group list-group-flush">
             <li class="list-group-item">
               <div class="row">
                 <div class="col-6 text-center border-right">
-                  <div class="h5">1342</div>
-                  <div class="h6 text-muted">Eventos Ministrados</div>
+                  <div class="h5">0</div>
+                  <div class="h6 text-muted">Eventos Criados</div>
                 </div>
                 <div class="col-6 text-center">
-                  <div class="h5">1342</div>
-                  <div class="h6 text-muted">Eventos Participados</div>
+                  <div class="h5">0</div>
+                  <div class="h6 text-muted">Eventos como Participante</div>
                 </div>
               </div>
             </li>
@@ -72,7 +73,7 @@
         </div>
         <div class="form-group col-sm-5">
           <label>Último nome</label>
-          <input type="text" class="form-control" formControlName="lastName" 
+          <input type="text" class="form-control" formControlName="lastName"
           [ngClass]="{'is-invalid': f.lastName.errors && f.lastName.touched}"/>
           <div class="invalid-feedback">Sobrenome é obrigatório </div>
         </div>
@@ -109,14 +110,14 @@
         </div>
       </div>
 
-      <form-group class="col-12">
+      <div class="form-group col-12">
         <label>Descrição</label>
         <input type="text" class="form-control" formControlName="description"
         [ngClass]="{'is-invalid': f.description.errors && f.description.touched}"/>
         <div *ngIf="f.description.errors && f.description.touched" class="invalid-feedback">
           <div *ngIf="f.description.errors.required">Descrição é obrigatório</div>
         </div>
-      </form-group>
+      </div>
     </div>
     <div>
       <h3 class="pt-3 border-bottom">Mudar Senha</h3>
