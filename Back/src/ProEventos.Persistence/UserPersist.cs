@@ -34,4 +34,4 @@ namespace ProEventos.Persistence
                                  .SingleOrDefaultAsync(user => user.UserName == userName.ToLower());
         }
     }
-}
+}   

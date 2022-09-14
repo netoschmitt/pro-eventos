@@ -50,7 +50,7 @@
         <!-- Properties Bindings -->
         <img [collapse]="!exibirImagem"
         [isAnimated]="true"
-        
+
         [src]="mostraImagem(evento.imagemURL)"
         [style.width.px]="larguraImagem"
         [style.margin.px]="exibirImagem"
@@ -83,6 +83,28 @@
         </tr>
       </tfoot>
     </table>
+
+    <div class="d-flex justify-content-center">
+      
+      <pagination
+      [boundaryLinks]="true"
+
+      [totalItems]="pagination.totalItems"
+      [itemsPerPage]="pagination.itemsPerPage"
+      [(ngModel)]="pagination.currentPage"
+      (pageChanged)="pageChanged($event)"
+
+
+      pageBtnClass="btn"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;">
+
+      </pagination>
+
+    </div>
+
   </div>
 
   <!-- {{eventos | json}} -->
